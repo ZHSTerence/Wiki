@@ -1,0 +1,18 @@
+	/**
+	 * 校验某个服务是否还活着
+	 * @param context 
+	 * @param serviceName  服务的名称
+	 */
+	public static boolean  isServiceRunning(Context context,String serviceName){
+		//校验服务是否还活着
+		ActivityManager am = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+		List<RunningServiceInfo> infos = am.getRunningServices(100);
+		for (RunningServiceInfo Info : infos) {
+			String name = Info.service.getClassName();
+			if (name.equals(serviceName)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}

@@ -1,0 +1,72 @@
+/**
+ * 系统信息工具类
+ * @author Administrator
+ */
+public class SystemInfoUtils {
+
+	/**
+	 * 获取正在运行的进程个数
+	 * @param context 上下文
+	 * @return  long 
+	 */
+	public static long getRunningProcessCount(Context context){
+		// PackageManager 相当于widnows 电脑的应用程序管理器。静态的内容
+		// ActivityManager 相当于widnows电脑的进程管理器，管理手机的活动信息。动态的信息
+		ActivityManager am = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+		List<RunningAppProcessInfo> infos = am.getRunningAppProcesses();
+		return infos.size();
+	}
+	
+	
+	
+	/**
+	 * 获取手机的剩余内存
+	 * @param context 上下文
+	 * @return   long
+	 */
+	public static long getAvailMem(Context context){
+		ActivityManager am = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+		MemoryInfo outInfo = new MemoryInfo();
+		am.getMemoryInfo(outInfo);
+		return outInfo.availMem;
+	}
+	
+	
+	/**
+	 * 获取手机的总的内存
+	 * @param context 上下文
+	 * @return Long byte单位
+	 */
+	public static long getTotalMem(Context context){
+		/*该方法有个缺陷，就是它支持的是Api 16之后的版本
+		ActivityManager am = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
+		MemoryInfo outInfo = new MemoryInfo();
+		am.getMemoryInfo(outInfo);
+		return outInfo.totalMem ;
+	    */
+		
+		//适合所有的版本
+		try {
+			File file = new File("proc/meminfo");
+			FileInputStream fis = new FileInputStream(file);
+			BufferedReader bf = new BufferedReader(new InputStreamReader(fis));
+			//读取 proc/meminfo 下的文件  第一行就是我们要的数据
+			//MemTotal：          1000000KB
+			String line = bf.readLine();
+			StringBuilder sb = new StringBuilder();
+			for (char c  : line.toCharArray()) {
+				if (c >= '0' && c <= '9') {
+					sb.append(c);
+				}
+			}
+			return Long.parseLong(sb.toString()) * 1024;
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			return 0;
+		}
+		
+	
+	}
+
+}

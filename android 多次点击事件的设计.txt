@@ -1,0 +1,19 @@
+	//数组的长度表示点击事件的次数
+	long[] mHits = new long[3];
+	
+	/**
+	 * 点击事件
+	 * @param view
+	 */
+	public void click(View view){
+		//src  源数组
+		//srcPos  从源数组的哪个位置开始拷贝
+		//dst   目标
+		//dstPos  从目标数组的哪个位置开始拷贝
+		//length  拷贝的长度
+		System.arraycopy(mHits, 1, mHits, 0, mHits.length -1);
+		mHits[mHits.length -1] = SystemClock.uptimeMillis();
+		if (mHits[0] > SystemClock.uptimeMillis() - 500) { //500表示的是响应事件范围
+			Toast.makeText(this, "三次点击事件", 0).show();
+		}
+	}

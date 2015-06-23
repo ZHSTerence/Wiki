@@ -1,0 +1,33 @@
+	/**
+	 * 获取一个文件的md5 信息
+	 * @param path文件的完整路径
+	 * @return String 返回文件的md5信息
+	 */
+	public static String getFileMd5(String path) {
+		try {
+			File file = new File(path);
+			MessageDigest digest = MessageDigest.getInstance("md5");
+			FileInputStream fis = new FileInputStream(file);
+			byte[] buffer = new byte[1024];
+			int len = 0;
+			while ((len = fis.read(buffer)) != -1) {
+				// 使用这个方法可以只对部分文件进行计算，不用计算全部
+				digest.update(buffer, 0, len);
+			}
+			StringBuilder sb = new StringBuilder();
+			byte[] result = digest.digest();
+			for (byte b : result) {
+				int number = b & 0xff;
+				String str = Integer.toHexString(number);
+				if (str.length() == 1) {
+					sb.append("0");
+				}
+				sb.append(str);
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+
+	}
